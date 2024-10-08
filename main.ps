@@ -34,13 +34,14 @@ huh MAX_VALUE<WHOLE_NUMBER> = 100;
 
 uh x<WHOLE_NUMBER> = 10;
 uh y<WHOLE_NUMBER> = 20;
+uh z<WHOLE_NUMBER> = x + y;
 
 uh sum<WHOLE_NUMBER> = add<WHOLE_NUMBER>(x, y);
 uh difference<WHOLE_NUMBER> = subtract<WHOLE_NUMBER>(y, x);
 uh product<WHOLE_NUMBER> = multiply<WHOLE_NUMBER>(x, y);
 uh quotient<WHOLE_NUMBER> = divide<WHOLE_NUMBER>(y, x);
 
-pad("x =", x, "y =", y);
+pad("x =", x, "y =", y, "z =", z);
 pad("Sum:", sum, "Difference:", difference);
 pad("Product:", product, "Quotient:", quotient);
 pad("Maximum value allowed:", MAX_VALUE);

@@ -2,6 +2,7 @@ import re
 import tkinter as tk
 from tkinter import filedialog
 import sys
+from datetime import datetime
 
 # DEBUG = True
 DEBUG = False
@@ -1267,6 +1268,7 @@ interpreter = Interpreter()
 # GUI for File Selection
 # -----------------------------
 def main():
+    time = ""
     if DEBUG:
         print("main: Starting PadScript Interpreter GUI.")
     root = tk.Tk()
@@ -1278,12 +1280,18 @@ def main():
     if filename:
         if DEBUG:
             print(f"main: Selected file '{filename}'")
+            
+        time = datetime.now()
         interpreter.run(filename)
+        time = datetime.now() - time
     else:
         if DEBUG:
             print("main: No file selected.")
-    input("Press Enter to exit.")  # Only essential user prompt
+            
+    return time
 
 # Entry point
 if __name__ == "__main__":
-    main()
+    time = main()
+    print(f"\nExecution time: {time.total_seconds()} seconds")
+    input("Press any key to exit...")  # Keep the window open
