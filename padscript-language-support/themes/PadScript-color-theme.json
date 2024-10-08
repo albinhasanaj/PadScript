@@ -1,0 +1,69 @@
+{
+    "name": "PadScript Theme",
+    "tokenColors": [
+        {
+            "scope": "keyword.control.padscript",
+            "settings": {
+                "foreground": "#d19a66", // Orange for control keywords (e.g., do, ADOPT)
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "scope": "keyword.declaration.padscript",
+            "settings": {
+                "foreground": "#c678dd", // Purple for declarations (e.g., uh, huh)
+                "fontStyle": "italic"
+            }
+        },
+        {
+            "scope": "entity.name.function.padscript",
+            "settings": {
+                "foreground": "#61afef", // Blue for function names
+                "fontStyle": "bold"
+            }
+        },
+        {
+            "scope": "variable.other.padscript",
+            "settings": {
+                "foreground": "#e5c07b", // Yellow for variables
+            }
+        },
+        {
+            "scope": "storage.type.padscript",
+            "settings": {
+                "foreground": "#56b6c2", // Cyan for types (e.g., <WHOLE_NUMBER>)
+            }
+        },
+        {
+            "scope": "constant.numeric.padscript",
+            "settings": {
+                "foreground": "#d19a66", // Orange for numbers
+            }
+        },
+        {
+            "scope": "keyword.operator.padscript",
+            "settings": {
+                "foreground": "#e06c75", // Red for operators (+, -, =)
+            }
+        },
+        {
+            "scope": "string.quoted.double.padscript",
+            "settings": {
+                "foreground": "#98c379", // Green for strings
+            }
+        },
+        {
+            "scope": "punctuation.definition.brackets.padscript",
+            "settings": {
+                "foreground": "#abb2bf" // Light gray for brackets
+            }
+        },
+        {
+            "scope": "constant.language.padscript",
+            "settings": {
+                "foreground": "#d19a66", // Orange for constants like MAX_VALUE
+                "fontStyle": "bold"
+            }
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "padscript-language-support",
+  "displayName": "PadScript Language Support",
+  "description": "Language support for the amazing language PadScript",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.50.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "padscript",
+        "aliases": [
+          "PadScript",
+          "ps"
+        ],
+        "extensions": [
+          ".ps"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "padscript",
+        "scopeName": "source.padscript",
+        "path": "./syntaxes/ps.tmLanguage.json"
+      }
+    ],
+    "themes": [
+      {
+        "label": "PadScript Theme",
+        "uiTheme": "vs-dark",
+        "path": "./themes/PadScript-color-theme.json"
+      }
+    ]
+  }
+}

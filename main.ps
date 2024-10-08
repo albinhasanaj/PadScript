@@ -1,0 +1,73 @@
+GIVE_THIS "math_utils";
+
+MAKE_BIG_BLOCK add<WHOLE_NUMBER>(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
+    ADOPT a + b;
+}
+
+MAKE_BIG_BLOCK subtract<WHOLE_NUMBER>(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
+    ADOPT a - b;
+}
+
+MAKE_BIG_BLOCK multiply<WHOLE_NUMBER>(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
+    ADOPT a * b;
+}
+
+MAKE_BIG_BLOCK divide<WHOLE_NUMBER>(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
+    ADOPT a / b;
+}
+
+MAKE_BIGGER_BLOCK Calculator(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
+    uh current_sum<WHOLE_NUMBER> = add<WHOLE_NUMBER>(a, b);
+    uh current_product<WHOLE_NUMBER> = multiply<WHOLE_NUMBER>(a, b);
+    pad("Calculator initialized with sum:", current_sum, "and product:", current_product);
+    
+    MAKE_BIG_BLOCK get_sum<WHOLE_NUMBER>() {
+        ADOPT current_sum;
+    }
+    
+    MAKE_BIG_BLOCK get_product<WHOLE_NUMBER>() {
+        ADOPT current_product;
+    }
+}
+
+huh MAX_VALUE<WHOLE_NUMBER> = 100;
+
+uh x<WHOLE_NUMBER> = 10;
+uh y<WHOLE_NUMBER> = 20;
+
+uh sum<WHOLE_NUMBER> = add<WHOLE_NUMBER>(x, y);
+uh difference<WHOLE_NUMBER> = subtract<WHOLE_NUMBER>(y, x);
+uh product<WHOLE_NUMBER> = multiply<WHOLE_NUMBER>(x, y);
+uh quotient<WHOLE_NUMBER> = divide<WHOLE_NUMBER>(y, x);
+
+pad("x =", x, "y =", y);
+pad("Sum:", sum, "Difference:", difference);
+pad("Product:", product, "Quotient:", quotient);
+pad("Maximum value allowed:", MAX_VALUE);
+
+uh numbers<MORE_WHOLE_NUMBER> = [1, 2, 3, 4, 5];
+pad("Numbers list:", numbers);
+
+uh calculator1<Calculator> = Calculator(5, 15);
+uh calculator2<Calculator> = Calculator(20, 30);
+
+uh square_of_sum<WHOLE_NUMBER> = square<WHOLE_NUMBER>(sum);
+uh cube_of_product<WHOLE_NUMBER> = cube<WHOLE_NUMBER>(product);
+pad("Square of Sum:", square_of_sum);
+pad("Cube of Product:", cube_of_product);
+
+uh score<WHOLE_NUMBER> = 95;
+
+do(score >= 90) {
+    pad("Grade: A");
+}
+do_not_work(score >= 80) {
+    pad("Grade: B");
+}
+do_not_work_not_work {
+    pad("Grade: C");
+}
+
+
+pad("End of PadScript program.");
+
