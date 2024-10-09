@@ -77,12 +77,15 @@ do_not_work_not_work {
     pad("Grade: C");
 }
 
-uh greeting<WORDS> = "Hello, ChatGPT!";
-uh initial<CHAR> = 'H';
-uh fruits<MORE_WORDS> = ["apple", "banana", "cherry"];
+uh numbers<MORE_WHOLE_NUMBER> = [1, 2, 3];
+LOOP_COOL : grab number from numbers {
+    pad(number);
+}
 
-pad(greeting);
-pad(initial);
-pad(fruits);
+uh fruits<MORE_WORDS> = ["banana", "apple", "peach"];
+LOOP_COOL : grab fruit from fruits {
+    pad(fruit);
+}
+
 
 pad("End of PadScript program.");

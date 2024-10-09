@@ -363,6 +363,83 @@ class Interpreter:
         self.block_executed = False
         return j
 
+    def handle_loop_cool(self, tokens, i):
+        if DEBUG:
+            print(f"handle_loop_cool: Handling 'LOOP_COOL' starting at index {i}")
+        
+        # Expect ':' after 'LOOP_COOL'
+        if tokens[i + 1].type != 'COLON':
+            raise InterpreterError(f"Expected ':' after 'LOOP_COOL' at line {tokens[i + 1].line}")
+        
+        # Expect 'GRAB' token
+        if tokens[i + 2].type != 'GRAB':
+            raise InterpreterError(f"Expected 'grab' after ':' in 'LOOP_COOL' at line {tokens[i + 2].line}")
+        
+        # Expect loop variable (WORD)
+        if tokens[i + 3].type != 'WORD':
+            raise InterpreterError(f"Expected loop variable name after 'grab' in 'LOOP_COOL' at line {tokens[i + 3].line}")
+        
+        loop_var = tokens[i + 3].value
+        if DEBUG:
+            print(f"handle_loop_cool: Loop variable '{loop_var}'")
+        
+        # Expect 'FROM' token
+        if tokens[i + 4].type != 'FROM':
+            raise InterpreterError(f"Expected 'from' after loop variable in 'LOOP_COOL' at line {tokens[i + 4].line}")
+        
+        # Expect list variable (WORD)
+        if tokens[i + 5].type != 'WORD':
+            raise InterpreterError(f"Expected list variable name after 'from' in 'LOOP_COOL' at line {tokens[i + 5].line}")
+        
+        list_var = tokens[i + 5].value
+        if DEBUG:
+            print(f"handle_loop_cool: Source list variable '{list_var}'")
+        
+        # Expect 'LBRACE' token to start the loop block
+        if tokens[i + 6].type != 'LBRACE':
+            raise InterpreterError(f"Expected '{{' to start 'LOOP_COOL' block at line {tokens[i + 6].line}")
+        
+        # Extract the loop block tokens
+        loop_block = []
+        brace_count = 1
+        j = i + 7  # Start after '{'
+        while j < len(tokens) and brace_count > 0:
+            if tokens[j].type == 'LBRACE':
+                brace_count += 1
+            elif tokens[j].type == 'RBRACE':
+                brace_count -= 1
+            if brace_count > 0:
+                loop_block.append(tokens[j])
+            j += 1
+        
+        if brace_count != 0:
+            raise InterpreterError(f"Unmatched '{{' in 'LOOP_COOL' block starting at line {tokens[i].line}")
+        
+        # Retrieve the source list
+        source_list = self.get_variable(list_var)
+        if not isinstance(source_list, list):
+            raise InterpreterError(f"Variable '{list_var}' is not a list at line {tokens[i].line}")
+        if DEBUG:
+            print(f"handle_loop_cool: Retrieved list '{list_var}': {source_list}")
+        
+        # Iterate over the list and execute the loop block for each element
+        for element in source_list:
+            if DEBUG:
+                print(f"handle_loop_cool: Iterating with '{loop_var}' = {element}")
+            self.push_scope()
+            self.set_variable(loop_var, element)
+            if DEBUG:
+                print(f"handle_loop_cool: Set loop variable '{loop_var}' to '{element}' in new scope")
+            self.execute_tokens(loop_block)
+            self.pop_scope()
+            if DEBUG:
+                print(f"handle_loop_cool: Popped scope after iterating '{loop_var}' = '{element}'")
+        
+        if DEBUG:
+            print(f"handle_loop_cool: Completed 'LOOP_COOL' starting at index {i}")
+        
+        return j  # Return the index after the loop block
+
     def get_variable(self, name):
         # Handle 'this.attribute' keyword
         if self.current_class and '.' in name:
@@ -1292,6 +1369,12 @@ class Interpreter:
                             brace_count -= 1
                         k += 1
                     i = k  # Move past the 'else' block
+            
+            elif token.type == 'LOOP_COOL':
+                if DEBUG:
+                    print("execute_tokens: Detected 'LOOP_COOL' statement.")
+                i = self.handle_loop_cool(tokens, i)
+            
             elif token.type == 'WORD':
                 # Potential function call
                 if i + 1 < len(tokens) and tokens[i + 1].type == 'LPAREN':
