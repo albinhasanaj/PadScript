@@ -1,4 +1,4 @@
-GIVE_THIS "math_utils";
+TAKE_THIS "math_utils";
 
 MAKE_BIG_BLOCK add<WHOLE_NUMBER>(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
     ADOPT a + b;
@@ -14,6 +14,14 @@ MAKE_BIG_BLOCK multiply<WHOLE_NUMBER>(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
 
 MAKE_BIG_BLOCK divide<WHOLE_NUMBER>(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
     ADOPT a / b;
+}
+
+MAKE_BIG_BLOCK square<WHOLE_NUMBER>(a<WHOLE_NUMBER>) {
+    ADOPT a * a;
+}
+
+MAKE_BIG_BLOCK cube<WHOLE_NUMBER>(a<WHOLE_NUMBER>) {
+    ADOPT a * a * a;
 }
 
 MAKE_BIGGER_BLOCK Calculator(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
@@ -69,6 +77,12 @@ do_not_work_not_work {
     pad("Grade: C");
 }
 
+uh greeting<WORDS> = "Hello, ChatGPT!";
+uh initial<CHAR> = 'H';
+uh fruits<MORE_WORDS> = ["apple", "banana", "cherry"];
+
+pad(greeting);
+pad(initial);
+pad(fruits);
 
 pad("End of PadScript program.");
-

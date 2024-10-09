@@ -23,7 +23,7 @@ TOKEN_SPECIFICATIONS = [
     ('RUN_THIS_BITCH', r'\brun_this_bitch\b'), # run_this_bitch
     ('ATTACK_THIS_BITCH', r'\battack_this_bitch\b'), # attack_this_bitch
     ('HAHA_U_CAUGHT', r'\bhaha_u_caught\b'),   # haha_u_caught
-    ('GIVE_THIS', r'\bGIVE_THIS\b'),           # GIVE_THIS
+    ('TAKE_THIS', r'\bTAKE_THIS\b'),           # TAKE_THIS
     ('CONFUSING_WORD', r'\bconfusing_word\b'), # confusing_word
     ('UH', r'\buh\b'),                         # uh
     ('HUH', r'\bhuh\b'),                       # huh
@@ -33,6 +33,7 @@ TOKEN_SPECIFICATIONS = [
     ('YES', r'\bYES\b'),                       # YES
     ('NO', r'\bNO\b'),                         # NO
     ('WHOLE_NUMBER', r'<WHOLE_NUMBER>'),
+    ('WORDS', r'<WORDS>'), #string
     ('NOT_NICE_NUMBER', r'<NOT_NICE_NUMBER>'),
     ('MORE_WORDS', r'<MORE_WORDS>'),
     ('WORD_TYPE', r'<WORD>'),
@@ -765,7 +766,21 @@ class Interpreter:
                 print(f"handle_variable_declaration: Detected {var_type_str} '{var_name}' of type '{var_type}'")
         
         # Check if var_type is a predefined type or a class
-        predefined_types = {'WHOLE_NUMBER', 'NOT_NICE_NUMBER', 'MORE_WORDS', 'WORD', 'CHAR', 'MORE_WHOLE_NUMBER', 'YES_OR_NO', 'STR<WORD>', 'STR<CHAR>', 'WORD<WORD>', 'WORD<CHAR>'}
+        predefined_types = {
+            'WHOLE_NUMBER',
+            'NOT_NICE_NUMBER',
+            'MORE_WORDS',
+            'WORD',
+            'CHAR',
+            'MORE_WHOLE_NUMBER',
+            'YES_OR_NO',
+            'STR<WORD>',
+            'STR<CHAR>',
+            'WORD<WORD>',
+            'WORD<CHAR>',
+            'WORDS'  # Added 'WORDS' type
+        }
+
         
         if var_type.upper() in predefined_types:
             var_type_upper = var_type.upper()
@@ -861,16 +876,67 @@ class Interpreter:
                 else:
                     raise InterpreterError(f"Invalid value for YES_OR_NO at line {tokens[j].line}")
                 j += 1
-            elif var_type_upper in ('STR<WORD>', 'STR<CHAR>', 'WORD<WORD>', 'WORD<CHAR>'):
+            elif var_type_upper in ('STR<WORD>', 'STR<CHAR>', 'WORD<WORD>', 'WORD<CHAR>', 'WORDS'):
+                # Handle string types including 'WORDS'
                 if tokens[j].type == 'STRING':
-                    var_value = tokens[j].value.strip('"')
+                    var_value = tokens[j].value.strip('"').strip("'")
                     if DEBUG:
-                        print(f"handle_variable_declaration: Set string variable '{var_name}' to '{var_value}'")
+                        print(f"handle_variable_declaration: Set '{var_type_upper}' variable '{var_name}' to '{var_value}'")
+                    j += 1
                 else:
-                    raise InterpreterError(f"Invalid value for string type at line {tokens[j].line}")
+                    raise InterpreterError(f"Invalid value for '{var_type_upper}' at line {tokens[j].line}")
+            elif var_type_upper == 'CHAR':  # **Added handling for CHAR**
+                if tokens[j].type in ('STRING', 'CHAR'):
+                    var_value = tokens[j].value.strip('"').strip("'")
+                    if len(var_value) != 1:
+                        raise InterpreterError(f"Invalid CHAR value '{var_value}' at line {tokens[j].line}")
+                    if DEBUG:
+                        print(f"handle_variable_declaration: Set 'CHAR' variable '{var_name}' to '{var_value}'")
+                    j += 1
+                else:
+                    raise InterpreterError(f"Invalid value for 'CHAR' at line {tokens[j].line}")
+            elif var_type_upper == 'MORE_WORDS':
+                # Handle list initialization for MORE_WORDS
+                if j >= len(tokens):
+                    raise InterpreterError(f"Unexpected end of tokens while parsing list for '{var_name}' at line {var_decl_token.line}")
+                if tokens[j].type != 'LBRACKET':
+                    raise InterpreterError(f"Expected '[' to start list at line {tokens[j].line}")
+                if DEBUG:
+                    print(f"handle_variable_declaration: Found '[' to start list for variable '{var_name}'")
+                list_values = []
                 j += 1
-            else:
-                raise InterpreterError(f"Variable type '{var_type}' not implemented.")
+                while j < len(tokens) and tokens[j].type != 'RBRACKET':
+                    token = tokens[j]
+                    if token.type == 'STRING':
+                        cleaned_value = token.value.strip('"').strip("'")
+                        list_values.append(cleaned_value)
+                        if DEBUG:
+                            print(f"handle_variable_declaration: Appended string '{cleaned_value}' to list")
+                    elif token.type == 'CHAR':
+                        cleaned_value = token.value.strip('"').strip("'")
+                        list_values.append(cleaned_value)
+                        if DEBUG:
+                            print(f"handle_variable_declaration: Appended char '{cleaned_value}' to list")
+                    elif token.type == 'WORD':
+                        var_val = self.get_variable(token.value)
+                        list_values.append(var_val)
+                        if DEBUG:
+                            print(f"handle_variable_declaration: Appended variable '{token.value}' with value '{var_val}' to list")
+                    elif token.type == 'COMMA':
+                        if DEBUG:
+                            print("handle_variable_declaration: Encountered comma in list, skipping")
+                        pass  # Skip commas
+                    else:
+                        raise InterpreterError(f"Invalid token '{token.value}' in list at line {token.line}")
+                    j += 1
+                if j >= len(tokens):
+                    raise InterpreterError(f"Expected ']' to close list for '{var_name}' at line {var_decl_token.line}")
+                var_value = list_values
+                if DEBUG:
+                    print(f"handle_variable_declaration: Parsed list value for '{var_name}': {var_value}")
+                j += 1  # Move past 'RBRACKET'
+   
+            
         elif var_type_upper in self.classes:
             # Handle class instantiation
             if tokens[j].type != 'WORD' or tokens[j].value != var_type_upper:
@@ -907,6 +973,7 @@ class Interpreter:
                 print(f"handle_variable_declaration: Created instance of class '{var_type_upper}' with arguments {args}")
             var_value = instance
             j = k + 1  # Move past ')'
+        
         else:
             raise InterpreterError(f"Variable type '{var_type}' not implemented.")
         
@@ -918,6 +985,7 @@ class Interpreter:
                     print(f"handle_variable_declaration: Assigned '{var_name}' to class '{self.current_class.class_def['name']}' with value '{var_value}'")
             else:
                 raise InterpreterError(f"Class attribute '{var_name}' declared outside of class context.")
+        
         else:
             self.set_variable(var_name, var_value)
             if DEBUG:
@@ -1083,12 +1151,12 @@ class Interpreter:
     def parse_import_statement(self, tokens, i):
         if DEBUG:
             print(f"parse_import_statement: Parsing import statement starting at index {i}")
-        # GIVE_THIS "module_name";
-        if tokens[i].type != 'GIVE_THIS':
-            raise InterpreterError(f"Expected 'GIVE_THIS' at line {tokens[i].line}")
+        # TAKE_THIS "module_name";
+        if tokens[i].type != 'TAKE_THIS':
+            raise InterpreterError(f"Expected 'TAKE_THIS' at line {tokens[i].line}")
         module_token = tokens[i + 1]
         if module_token.type not in ('STRING', 'WORD'):
-            raise InterpreterError(f"Expected module name after 'GIVE_THIS' at line {module_token.line}")
+            raise InterpreterError(f"Expected module name after 'TAKE_THIS' at line {module_token.line}")
         module_name = module_token.value.strip('"').strip("'")
         if DEBUG:
             print(f"parse_import_statement: Module to import '{module_name}'")
@@ -1183,7 +1251,7 @@ class Interpreter:
                 if DEBUG:
                     print("execute_tokens: Detected class definition.")
                 i = self.handle_class_definition(tokens, i)
-            elif token.type == 'GIVE_THIS':
+            elif token.type == 'TAKE_THIS':
                 if DEBUG:
                     print("execute_tokens: Detected import statement.")
                 i = self.handle_import_statement(tokens, i)
