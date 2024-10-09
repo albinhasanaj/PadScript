@@ -1,91 +1,169 @@
-TAKE_THIS "math_utils";
+# -----------------------------
+# PadScript Comprehensive Test
+# -----------------------------
 
-MAKE_BIG_BLOCK add<WHOLE_NUMBER>(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
-    ADOPT a + b;
+# 1. Function Definitions
+# -----------------------
+
+# Define a function to calculate the square of a number
+MAKE_BIG_BLOCK square<WHOLE_NUMBER>(n<WHOLE_NUMBER>) {
+    ADOPT n * n;
 }
 
-MAKE_BIG_BLOCK subtract<WHOLE_NUMBER>(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
-    ADOPT a - b;
+# Define a function to greet a person
+MAKE_BIG_BLOCK greet<WORDS>(name<WORDS>) {
+    ADOPT "Hello, " + name + "!";
 }
 
-MAKE_BIG_BLOCK multiply<WHOLE_NUMBER>(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
-    ADOPT a * b;
+# 2. Class Definition
+# --------------------
+
+# Define a class Person with name and age
+MAKE_BIGGER_BLOCK Person(name<WORDS>, age<WHOLE_NUMBER>) {
+    # No methods, just attributes
+    # Attributes are initialized via the constructor
 }
 
-MAKE_BIG_BLOCK divide<WHOLE_NUMBER>(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
-    ADOPT a / b;
-}
+# 3. Variable Declarations
+# -------------------------
 
-MAKE_BIG_BLOCK square<WHOLE_NUMBER>(a<WHOLE_NUMBER>) {
-    ADOPT a * a;
-}
+# Create a list of Person instances
+uh people<MORE_WORDS> = [
+    Person("Alice", 30),
+    Person("Bob", 17),
+    Person("Charlie", 25),
+    Person("Diana", 15)
+];
 
-MAKE_BIG_BLOCK cube<WHOLE_NUMBER>(a<WHOLE_NUMBER>) {
-    ADOPT a * a * a;
-}
+# 4. Looping Through the List
+# ----------------------------
 
-MAKE_BIGGER_BLOCK Calculator(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
-    uh current_sum<WHOLE_NUMBER> = add<WHOLE_NUMBER>(a, b);
-    uh current_product<WHOLE_NUMBER> = multiply<WHOLE_NUMBER>(a, b);
-    pad("Calculator initialized with sum:", current_sum, "and product:", current_product);
+# Iterate over the list and display information about each person
+LOOP_COOL : grab person from people {
+    # Print the person's name and age
+    pad("Name: " + person.name + ", Age: " + person.age);
     
-    MAKE_BIG_BLOCK get_sum<WHOLE_NUMBER>() {
-        ADOPT current_sum;
+    # Conditional Checks
+    do(person.age >= 18) {
+        pad(person.name + " is an adult.");
     }
-    
-    MAKE_BIG_BLOCK get_product<WHOLE_NUMBER>() {
-        ADOPT current_product;
+    do_not_work(person.age < 18) {
+        pad(person.name + " is a minor.");
+    }
+    do_not_work_not_work {
+        pad("This block should not execute.");
     }
 }
 
-huh MAX_VALUE<WHOLE_NUMBER> = 100;
+# 5. User Input to Add a New Person
+# ----------------------------------
 
-uh x<WHOLE_NUMBER> = 10;
-uh y<WHOLE_NUMBER> = 20;
-uh z<WHOLE_NUMBER> = x + y;
+# Prompt the user to enter the name of a new person
+uh new_name<WORDS> = pad_in("Enter the name of the new person: ");
 
-uh sum<WHOLE_NUMBER> = add<WHOLE_NUMBER>(x, y);
-uh difference<WHOLE_NUMBER> = subtract<WHOLE_NUMBER>(y, x);
-uh product<WHOLE_NUMBER> = multiply<WHOLE_NUMBER>(x, y);
-uh quotient<WHOLE_NUMBER> = divide<WHOLE_NUMBER>(y, x);
+# Prompt the user to enter the age of the new person
+uh new_age_input<WORDS> = pad_in("Enter the age of the new person: ");
 
-pad("x =", x, "y =", y, "z =", z);
-pad("Sum:", sum, "Difference:", difference);
-pad("Product:", product, "Quotient:", quotient);
-pad("Maximum value allowed:", MAX_VALUE);
+# Convert the user input to a WHOLE_NUMBER
+# Assuming the interpreter handles casting during variable assignment
+uh new_age<WHOLE_NUMBER> = new_age_input;
 
-uh numbers<MORE_WHOLE_NUMBER> = [1, 2, 3, 4, 5];
-pad("Numbers list:", numbers);
+# Create a new Person instance with the provided name and age
+uh new_person<Person> = Person(new_name, new_age);
 
-uh calculator1<Calculator> = Calculator(5, 15);
-uh calculator2<Calculator> = Calculator(20, 30);
+# Since 'append' is not implemented, we cannot add to the existing list
+# Instead, we'll display the newly added person separately
+pad("Added new person: " + new_person.name + ", Age: " + new_person.age);
 
-uh square_of_sum<WHOLE_NUMBER> = square<WHOLE_NUMBER>(sum);
-uh cube_of_product<WHOLE_NUMBER> = cube<WHOLE_NUMBER>(product);
-pad("Square of Sum:", square_of_sum);
-pad("Cube of Product:", cube_of_product);
-
-uh score<WHOLE_NUMBER> = 95;
-
-do(score >= 90) {
-    pad("Grade: A");
+# Conditional Blocks to Demonstrate Control Structures
+do(new_person.age >= 18) {
+    pad(new_person.name + " is now an adult.");
 }
-do_not_work(score >= 80) {
-    pad("Grade: B");
+do_not_work(new_person.age < 18) {
+    pad(new_person.name + " is still a minor.");
 }
 do_not_work_not_work {
-    pad("Grade: C");
+    pad("This else block should not execute.");
 }
 
-uh numbers<MORE_WHOLE_NUMBER> = [1, 2, 3];
-LOOP_COOL : grab number from numbers {
-    pad(number);
+# 6. Constants and Arithmetic Expressions
+# ---------------------------------------
+
+# Define a constant PI
+huh PI<NOT_NICE_NUMBER> = 3.14159;
+
+# Calculate the circumference of a circle with radius 2 using PI
+uh circumference<NOT_NICE_NUMBER> = PI * 2;
+
+# Print the circumference
+pad("Circumference: " + circumference);
+
+# 7. Utilizing Built-in Functions
+# -------------------------------
+
+# Use the 'greet' function to greet a person
+uh greeting<WORDS> = greet("Eve");
+pad(greeting);
+
+# 8. Additional Control Flow Tests
+# --------------------------------
+
+# Define a list of numbers
+uh numbers<MORE_WHOLE_NUMBER> = [1, 2, 3, 4, 5];
+
+# Iterate over the numbers and print their squares
+LOOP_COOL : grab num from numbers {
+    # Calculate square using the 'square' function
+    uh squared<WHOLE_NUMBER> = square(num);
+    pad("Square of " + num + " is " + squared);
 }
 
-uh fruits<MORE_WORDS> = ["banana", "apple", "peach"];
-LOOP_COOL : grab fruit from fruits {
-    pad(fruit);
+# Use conditional statements to check multiple conditions
+uh test_num<WHOLE_NUMBER> = 10;
+
+do(test_num > 0) {
+    pad("test_num is positive.");
+}
+do_not_work(test_num < 0) {
+    pad("test_num is negative.");
+}
+do_not_work_not_work {
+    pad("test_num is zero.");
 }
 
+# 9. Nested Functions and Control Structures
+# ------------------------------------------
 
-pad("End of PadScript program.");
+# Define a function that uses another function
+MAKE_BIG_BLOCK compute_and_greet<WORDS>(num<WHOLE_NUMBER>, name<WORDS>) {
+    # Compute the square of the number
+    uh result<WHOLE_NUMBER> = square(num);
+    
+    # Greet the person with their name and computed result
+    uh message<WORDS> = greet(name) + " Your number squared is " + result;
+    ADOPT message;
+}
+
+# Call the nested function
+uh nested_greeting<WORDS> = compute_and_greet(5, "Frank");
+pad(nested_greeting);
+
+# 10. Final Loop to Demonstrate Multiple Features
+# -----------------------------------------------
+
+# Iterate over the list of people again to display updated information
+LOOP_COOL : grab person from people {
+    pad("Name: " + person.name + ", Age: " + person.age);
+    
+    do(person.age >= 18) {
+        pad(person.name + " continues to be an adult.");
+    }
+    do_not_work(person.age < 18) {
+        pad(person.name + " continues to be a minor.");
+    }
+    do_not_work_not_work {
+        pad("This block should not execute.");
+    }
+}
+
+# End of Test Script
