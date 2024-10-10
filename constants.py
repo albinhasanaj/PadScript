@@ -42,7 +42,7 @@ TOKEN_SPECIFICATIONS = [
     ('CHAR', r"'.*?'"),
     ('NUMBER', r'\d+(\.\d+)?([eE][-+]?\d+)?'),
     ('WORD', r'[a-zA-Z_][a-zA-Z0-9_]*'),
-    ('ARITHMETIC', r'\+|\-|\*|/'),
+    ('ARITHMETIC', r'\+|\-|\*|\/|\%'),        # Combined all arithmetic operators
     ('SKIP', r'[ \t\n]+'),
     ('UNKNOWN', r'.'),                        # Any other character
 ]

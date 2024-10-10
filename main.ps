@@ -166,6 +166,16 @@ LOOP_COOL : grab person from people {
     }
 }
 
+uh number_list<MORE_WHOLE_NUMBER> = [10, 20, 30, 40, 50, 43, 57];
+
+LOOP_COOL : grab num from number_list {
+    do(num % 2 == 0) {
+        pad(num + " is even.");
+    }
+    do_not_work_not_work {
+        pad(num + " is odd.");
+    }
+}
 
 
 # End of Test Script
