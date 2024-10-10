@@ -1,95 +1,145 @@
-# PadScript Language Documentation
+# PadScript Documentation
 
-## Introduction
+## Overview
 
-**PadScript** is a custom programming language designed with unique syntax and constructs to simplify control flow, mathematical operations, and object-oriented programming. It supports defining blocks of code, conditional logic, arithmetic operations, and more with a focus on readability and ease of use.
-
----
-
-## Table of Contents
-
-1. [Keywords](#keywords)
-2. [Mathematical Operations](#mathematical-operations)
-3. [Control Flow](#control-flow)
-4. [Object-Oriented Features](#object-oriented-features)
-5. [Functions](#functions)
-6. [Data Types](#data-types)
-7. [Examples](#examples)
+PadScript is a simple and expressive programming language that allows defining functions, classes, loops, and conditionals. It supports basic operations, user input handling, and arithmetic expressions. This document will serve as the guide to understanding and using the language effectively.
 
 ---
 
-## Keywords
+## 1. Function Definitions
 
-- **GIVE_THIS**: Used to import or link files or utilities, similar to `import`.
-- **MAKE_BIG_BLOCK**: Defines a function in PadScript. Equivalent to `function` or `def` in other languages.
-- **MAKE_BIGGER_BLOCK**: Defines a class or larger block, grouping related functionality together.
-- **ADOPT**: Used to return values from functions, similar to `return` in other languages.
-- **PAD**: Equivalent to `print` or `console.log`, used to output values to the screen.
-- **DO**: Equivalent to `if`.
-- **DO_NOT_WORK**: Equivalent to `else if`.
-- **DO_NOT_WORK_NOT_WORK**: Equivalent to `else`.
-- **UH**: Declares a variable.
-- **HUH**: Declares a constant variable.
+Functions in PadScript are defined using `MAKE_BIG_BLOCK`. The `ADOPT` keyword is used to return a value from the function. Parameters and return types are declared in angle brackets (`<WHOLE_NUMBER>`, `<WORDS>`, etc.).
+
+Example:
+
+`MAKE_BIG_BLOCK square<WHOLE_NUMBER>(n<WHOLE_NUMBER>) { ADOPT n * n; }`
+
+This defines a function named `square` that takes a number `n` and returns the square of that number.
+
+Similarly, another function can be defined:
+
+`MAKE_BIG_BLOCK greet<WORDS>(name<WORDS>) { ADOPT "Hello, " + name + "!"; }`
+
+The `greet` function takes a string `name` and returns a greeting message.
 
 ---
 
-## Mathematical Operations
+## 2. Class Definitions
 
-### Supported Operators
-- **add<WHOLE_NUMBER>(a, b)**: Adds two numbers `a` and `b`.
-- **subtract<WHOLE_NUMBER>(a, b)**: Subtracts `b` from `a`.
-- **multiply<WHOLE_NUMBER>(a, b)**: Multiplies `a` by `b`.
-- **divide<WHOLE_NUMBER>(a, b)**: Divides `a` by `b`.
+Classes in PadScript are defined using `MAKE_BIGGER_BLOCK`. Classes hold attributes (but no methods) and are initialized using a constructor.
 
-### Basic Example
-```padscript
-uh x<WHOLE_NUMBER> = 10;
-uh y<WHOLE_NUMBER> = 20;
-uh sum<WHOLE_NUMBER> = add<WHOLE_NUMBER>(x, y);
-pad("Sum:", sum);
-```
-### Control Flow
-```
-uh score<WHOLE_NUMBER> = 85;
+Example:
 
-DO(score >= 90) {
-    PAD("Grade: A");
-}
-DO_NOT_WORK(score >= 80) {
-    PAD("Grade: B");
-}
-DO_NOT_WORK_NOT_WORK {
-    PAD("Grade: C");
-}
-```
-### Functions
-```
-MAKE_BIG_BLOCK add<WHOLE_NUMBER>(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
-    ADOPT a + b;
-}
-```
-### Object Oriented Features
+`MAKE_BIGGER_BLOCK Person(name<WORDS>, age<WHOLE_NUMBER>) { }`
 
-```
-MAKE_BIGGER_BLOCK Calculator(a<WHOLE_NUMBER>, b<WHOLE_NUMBER>) {
-    uh current_sum<WHOLE_NUMBER> = add<WHOLE_NUMBER>(a, b);
-    uh current_product<WHOLE_NUMBER> = multiply<WHOLE_NUMBER>(a, b);
+This creates a `Person` class with two attributes: `name` and `age`. However, the class does not have any methods.
 
-    MAKE_BIG_BLOCK get_sum<WHOLE_NUMBER>() {
-        ADOPT current_sum;
-    }
+---
 
-    MAKE_BIG_BLOCK get_product<WHOLE_NUMBER>() {
-        ADOPT current_product;
-    }
-}
+## 3. Variable Declarations
 
-uh calculator<Calculator> = Calculator(5, 10);
-pad("Sum:", calculator.get_sum());
-pad("Product:", calculator.get_product());
-```
-### Function call example
-```
-uh result<WHOLE_NUMBER> = add<WHOLE_NUMBER>(10, 5);
-pad("Result of addition:", result);
-```
+Variables are declared using the `uh` keyword, followed by the variable type and value. For example:
+
+`uh people<MORE_WORDS> = [ Person("Alice", 30), Person("Bob", 17), Person("Charlie", 25), Person("Diana", 15) ];`
+
+This creates a list of `Person` instances, where each person has a name and an age.
+
+---
+
+## 4. Looping Through Lists
+
+PadScript uses the `LOOP_COOL` block for iterating through lists. The `grab` keyword extracts an element from the list during each iteration.
+
+Example:
+
+`LOOP_COOL : grab person from people { pad("Name: " + person.name + ", Age: " + person.age); }`
+
+This loop goes through each `Person` in the `people` list and prints their name and age.
+
+---
+
+## 5. Conditional Statements
+
+Conditional logic is handled using `do`, `do_not_work`, and `do_not_work_not_work` blocks.
+
+Example:
+
+`do(person.age >= 18) { pad(person.name + " is an adult."); } do_not_work(person.age < 18) { pad(person.name + " is a minor."); } do_not_work_not_work { pad("This block should not execute."); }`
+
+This checks whether a person is an adult or a minor and prints the corresponding message. The final `do_not_work_not_work` block handles the case where neither condition is met (though it will not execute in this example).
+
+---
+
+## 6. User Input
+
+User input is captured using the `pad_in` function.
+
+Example:
+
+`uh new_name<WORDS> = pad_in("Enter the name of the new person: "); uh new_age_input<WORDS> = pad_in("Enter the age of the new person: "); uh new_age<WHOLE_NUMBER> = new_age_input;`
+
+This takes a person's name and age from the user and stores it in the `new_name` and `new_age` variables.
+
+---
+
+## 7. Constants and Arithmetic Expressions
+
+Constants can be defined using the `huh` keyword, and basic arithmetic expressions can be performed using standard operators.
+
+Example:
+
+`huh PI<NOT_NICE_NUMBER> = 3.14159; uh circumference<NOT_NICE_NUMBER> = PI * 2; pad("Circumference: " + circumference);`
+
+This calculates the circumference of a circle with a radius of 2 using the constant `PI`.
+
+---
+
+## 8. Built-in Functions
+
+PadScript allows for defining and calling functions using the `MAKE_BIG_BLOCK` keyword. Functions can return values or perform operations.
+
+Example:
+
+`uh greeting<WORDS> = greet("Eve"); pad(greeting);`
+
+This calls the `greet` function, passing "Eve" as the argument, and prints the result.
+
+---
+
+## 9. Looping Through Numbers and Function Use
+
+PadScript allows looping through numbers and applying functions on them within the loop.
+
+Example:
+
+`uh numbers<MORE_WHOLE_NUMBER> = [1, 2, 3, 4, 5]; LOOP_COOL : grab num from numbers { uh squared<WHOLE_NUMBER> = square(num); pad("Square of " + num + " is " + squared); }`
+
+This loops through the `numbers` list and prints the square of each number by calling the `square` function.
+
+---
+
+## 10. Nested Functions and Control Structures
+
+Functions can call other functions inside them, allowing for nested logic.
+
+Example:
+
+`MAKE_BIG_BLOCK compute_and_greet<WORDS>(num<WHOLE_NUMBER>, name<WORDS>) { uh result<WHOLE_NUMBER> = square(num); uh message<WORDS> = greet(name) + " Your number squared is " + result; ADOPT message; }`
+
+This function `compute_and_greet` computes the square of a number and greets a person by name, combining both results.
+
+---
+
+## 11. Final Demonstration Loop
+
+To demonstrate the use of conditionals and loops again, here is a final example:
+
+`LOOP_COOL : grab person from people { pad("Name: " + person.name + ", Age: " + person.age); do(person.age >= 18) { pad(person.name + " continues to be an adult."); } do_not_work(person.age < 18) { pad(person.name + " continues to be a minor."); } do_not_work_not_work { pad("This block should not execute."); } }`
+
+This loop iterates over the `people` list again, prints updated information, and evaluates whether the person is an adult or minor.
+
+---
+
+## Conclusion
+
+PadScript provides a structured and simple way to define functions, classes, loops, and conditionals. While it has basic syntax, it can be extended to handle various types of logic and data manipulation. The constructs for handling input/output, conditionals, and loops make it suitable for small to medium-scale scripting tasks.

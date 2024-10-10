@@ -19,9 +19,6 @@ TOKEN_SPECIFICATIONS = [
     ('ADOPT', r'\bADOPT\b'),                  # ADOPT
     ('MAKE_BIG_BLOCK', r'\bMAKE_BIG_BLOCK\b'),# MAKE_BIG_BLOCK
     ('MAKE_BIGGER_BLOCK', r'\bMAKE_BIGGER_BLOCK\b'), # MAKE_BIGGER_BLOCK
-    ('RUN_THIS_BITCH', r'\brun_this_bitch\b'),# run_this_bitch
-    ('ATTACK_THIS_BITCH', r'\battack_this_bitch\b'),# attack_this_bitch
-    ('HAHA_U_CAUGHT', r'\bhaha_u_caught\b'),  # haha_u_caught
     ('TAKE_THIS', r'\bTAKE_THIS\b'),          # TAKE_THIS
     ('CONFUSING_WORD', r'\bconfusing_word\b'),# confusing_word
     ('UH', r'\buh\b'),                        # uh
