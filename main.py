@@ -39,4 +39,6 @@ def main():
 if __name__ == "__main__":
     time = main()
     print(f"\nExecution time: {time.total_seconds()} seconds")
-    input("Press any key to exit...")  # Keep the window open
+    #press any key to exit
+    input("Press Enter to exit...")
+    sys.exit(0)
